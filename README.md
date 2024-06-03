@@ -13,10 +13,10 @@
   </tr>
   <tr>
     <td align="center">
-    <a  href="demo.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg"></a>
+    <a  href="https://colab.research.google.com/github/normal-computing/extended-mind-transformers/blob/main/demo_llama.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg"></a>
     </td>
     <td align="center">
-    <a href="demo.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg"></a>
+    <a href="https://colab.research.google.com/github/normal-computing/extended-mind-transformers/blob/main/demo_mpt.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg"></a>
     </td>
  </tr>
 </table>
@@ -65,7 +65,7 @@ The retrieval-augmentation we introduce to the self-attention mechanism is quite
 
 <div align="center">
 
-scores = $\frac{K_{R}}{\mid \mid K_{R} \mid \mid} \times \frac{Q}{\mid \mid Q \mid \mid}$  $\hspace{.3cm}$ ,  $\hspace{.3cm}$  $\operatorname{softmax}\left(\frac{Q(K_{M}\oplus K_{L})^{T}}{\sqrt{d}}\right) \times \left(V_{M} \oplus V_{L}\right)$
+scores = $\frac{K_{R}}{\mid \mid K_{R} \mid \mid} \times \frac{Q}{\mid \mid Q \mid \mid}$  $\hspace{.3cm}$ ,  $\hspace{.3cm}$  $\text{softmax}\left(\frac{Q(K_{M}\oplus K_{L})^{T}}{\sqrt{d}}\right) \times \left(V_{M} \oplus V_{L}\right)$
 
 </div>
 
@@ -158,38 +158,17 @@ Our new benchmark is a modified [wikiQA benchmark](https://huggingface.co/datase
 ## Extended Mind Transformer performance
 We summarize the performance of Extended Mind Transformers on our long-range counterfactual retrieval benchmark. Extended Mind Transformers are competitive with fine-tuned models on long inputs, and outperform them on short inputs. Extended Mind Transformers combined with RAG outperform GPT-4 by a large margin, $6\%$ when averaged across input lengths. Check out the [paper]() for a full treatment. 
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Images Side by Side</title>
-    <style>
-        .container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        .container img {
-            max-width: 100%;
-            height: auto;
-        }
-        .image-wrapper {
-            width: 45%; /* Adjust this value to control the size of the images */
-        }
-    </style>
-</head>
-<body>
-    <br>
-    <div class="container">
-        <div class="image-wrapper">
-            <img src="assets/bar_graph_retrieval_70b.png" alt="Image 1">
-        </div>
-        <div class="image-wrapper">
-            <img src="assets/bar_graph_retrieval_7b.png" alt="Image 2">
-        </div>
-    </div>
-  <br>
-  <br>
-</body>
+<table>
+  <tr>
+    <td style="width: 50%; text-align: center;">
+      <img src="assets/bar_graph_retrieval_70b.png" alt="Retrieval 70b" style="max-width: 100%; height: auto;">
+    </td>
+    <td style="width: 50%; text-align: center;">
+      <img src="assets/bar_graph_retrieval_7b.png" alt="Retrieval 7b" style="max-width: 100%; height: auto;">
+    </td>
+  </tr>
+</table>
+
 
 
 <div align="center">
