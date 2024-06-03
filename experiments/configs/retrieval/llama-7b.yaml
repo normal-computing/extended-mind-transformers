@@ -1,0 +1,35 @@
+logs_dir: "./experiments/runs/retrieval/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+model: &model_params
+  rms_norm_eps: 1.0e-05
+  rope_scaling:
+    type: dynamic
+    factor: 8.0
+
+generation: &generation_params
+  sample: False
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 2
+
+# Experiment
+experiment_config:
+  use_rag: false
+  use_rag2: false
+  dynamic_topk: false
+  experiment_name: retrieval
+  model_architecture: 'llama'
+  precision: float16
+  chat_model: true
+  model_config: *model_params
+  model_location: 'local'
+  model_extended: false
+  auto_model: true
+  n_tokens: 30
+  device_map: 'auto'
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+  generation_config: *generation_params
+  transformers_version: "4.33.0"
+  model_provider: 'huggingface'

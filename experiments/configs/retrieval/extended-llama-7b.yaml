@@ -1,0 +1,63 @@
+logs_dir: "./experiments/runs/retrieval/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+model: &model_params
+  vocab_size: 32000
+  hidden_size: 4096
+  intermediate_size: 11008
+  num_hidden_layers: 32
+  num_attention_heads: 32
+  num_key_value_heads: null
+  hidden_act: silu
+  max_position_embeddings: 2048
+  initializer_range: 0.02
+  rms_norm_eps: 1.0e-05
+  use_cache: true
+  pad_token_id: null
+  bos_token_id: 1
+  eos_token_id: 2
+  pretraining_tp: 1
+  tie_word_embeddings: false
+  rope_theta: 10000.0
+  rope_scaling:
+    type: dynamic
+    factor: 8.0  
+  attention_bias: false
+  attention_dropout: 0.0
+  mask_by_sim: false
+  sim_threshold: 0.25
+  topk: 12
+  use_active_externalism: true
+  memory_type: manual
+  memory_device: cuda:0
+  remove_special_ids: true
+
+generation: &generation_params
+  sample: False
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 2
+
+# Experiment
+experiment_config:
+  use_rag2: false
+  use_rag: false
+  dynamic_topk: false
+  chat_model: false
+  precision: float16
+  model_architecture: 'llama'
+  model_config: *model_params
+  model_location: 'local'
+  model_extended: true
+  auto_model: false
+  n_tokens: 30
+  devices: ['cuda:0']
+  device_map: null
+  experiment_name: retrieval
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+  generation_config: *generation_params
+  transformers_version: "4.33.0"
+  model_provider: 'huggingface'
+  one_shot: "Answer the question based on the information provided in the document given in memory. The answer should be a single word or a number or a short phrase of few words.\ngeorge balanchine (/ˈbælən(t)ʃiːn, ˌbælənˈ(t)ʃiːn/;[1] born georgiy melitonovich balanchivadze; russian: георгий мелитонович баланчивадзе; georgian: გიორგი მელიტონის ძე ბალანჩივაძე; january 22, 1904 (o. s. january 9) – april 30, 1983) was an american ballet choreographer of georgian origin, recognized as one of the most influential choreographers of the 20th-century.[2] styled as the father of american ballet,[3] he co-founded the new york city ballet and remained its artistic director for more than 35 years.[4] his choreography is characterized by plotless ballets with minimal costume and décor, performed to classical and neoclassical music.[5]\nQuestion: when did George Balanchine die?\nAnswer: april 30, 1983\n\n"
+

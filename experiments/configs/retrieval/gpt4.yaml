@@ -1,0 +1,21 @@
+logs_dir: "./experiments/runs/retrieval/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+# Experiment
+experiment_config:
+  chat_model: true 
+  precision: null
+  use_rag: false
+  use_rag2: false
+  dynamic_topk: false
+  device_map: null
+  experiment_name: retrieval
+  model_architecture: 'openai'
+  model_location: 'api'
+  model_extended: false
+  auto_model: false
+  n_tokens: 30
+  model_name: gpt-4-0125-preview
+  model_provider: openai
+
+

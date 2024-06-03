@@ -1,0 +1,28 @@
+logs_dir: "./experiments/runs/retrieval/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+generation: &generation_params
+  sample: False
+  bos_token_id: 1
+  eos_token_id: 2
+
+# Experiment
+experiment_config:
+  use_rag: false
+  use_rag2: false
+  dynamic_topk: false
+  chat_model: false
+  precision: float16
+  experiment_name: retrieval
+  model_architecture: 'llama'
+  model_location: 'local'
+  model_extended: false
+  auto_model: true
+  n_tokens: 30
+  device_map: 'auto'
+  tokenizer_pretrained_model_name_or_path: "NousResearch/Yarn-Llama-2-7b-64k"
+  pretrained_model_name_or_path: "NousResearch/Yarn-Llama-2-7b-64k"
+  generation_config: *generation_params
+  transformers_version: "4.33.0"
+  model_provider: huggingface
+  one_shot: "Answer the question based on the information provided in the document given in memory. The answer should be a single word or a number or a short phrase of few words.\ngeorge balanchine (/ˈbælən(t)ʃiːn, ˌbælənˈ(t)ʃiːn/;[1] born georgiy melitonovich balanchivadze; russian: георгий мелитонович баланчивадзе; georgian: გიორგი მელიტონის ძე ბალანჩივაძე; january 22, 1904 (o. s. january 9) – april 30, 1983) was an american ballet choreographer of georgian origin, recognized as one of the most influential choreographers of the 20th-century.[2] styled as the father of american ballet,[3] he co-founded the new york city ballet and remained its artistic director for more than 35 years.[4] his choreography is characterized by plotless ballets with minimal costume and décor, performed to classical and neoclassical music.[5]\nQuestion: when did George Balanchine die?\nAnswer: april 30, 1983\n\n"

@@ -1,0 +1,46 @@
+logs_dir: "./experiments/runs/perplexity/"
+dataset_path: "./experiments/data/wikitext.json"
+
+model: &model_params
+  vocab_size: 32000
+  hidden_size: 4096
+  intermediate_size: 11008
+  num_hidden_layers: 32
+  num_attention_heads: 32
+  num_key_value_heads: null
+  hidden_act: silu
+  max_position_embeddings: 2048
+  initializer_range: 0.02
+  rms_norm_eps: 1.0e-05
+  pad_token_id: null
+  bos_token_id: 1
+  eos_token_id: 2
+  pretraining_tp: 1
+  tie_word_embeddings: false
+  rope_theta: 10000.0
+  attention_bias: false
+  attention_dropout: 0.0
+  mask_by_sim: false
+  sim_threshold: 0.25
+  topk: 3
+  use_external_mind: true
+  memory_type: manual
+  memory_device: cuda:0
+  use_cache: false
+  remove_special_ids: true
+
+experiment_config:
+  devices: ['cuda:0']
+  experiment_name: perplexity
+  input_lengths: [512, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 5632,6144, 6656, 7168, 7680, 8192, 8704, 9216, 9728]
+  persist_cache: false
+  verbose: false
+  strategy: extended
+
+  model_name: Llama-2-7b-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  model_config: *model_params
+  model_architecture: llama
+  max_inference_seq_len: 2048
+  seq_len_trained: 2048

@@ -1,0 +1,56 @@
+logs_dir: "./experiments/runs/timing/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+model: &model_params
+  vocab_size: 32000
+  hidden_size: 4096
+  intermediate_size: 11008
+  num_hidden_layers: 32
+  num_attention_heads: 32
+  num_key_value_heads: null
+  hidden_act: silu
+  max_position_embeddings: 2048
+  initializer_range: 0.02
+  rms_norm_eps: 1.0e-05
+  use_cache: true
+  pad_token_id: null
+  bos_token_id: 1
+  eos_token_id: 2
+  pretraining_tp: 1
+  tie_word_embeddings: false
+  rope_theta: 10000.0
+  rope_scaling: null
+  attention_bias: false
+  attention_dropout: 0.0
+  mask_by_sim: false
+  sim_threshold: 0.25
+  topk: 4
+  use_external_mind: true
+  memory_type: manual
+  memory_device: cuda:1
+  remove_special_ids: false
+
+generation: &generation_params
+  sample: False
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 2
+
+# Experiment
+experiment_config:
+  cache_context: false
+  n_queries: 25
+  experiment_name: timing
+  model_architecture: 'llama'
+  fp16: false
+  model_config: *model_params
+  auto_model: false
+  model_extended: true
+  n_tokens: 30
+  devices: ['cuda:1']
+  device_map: 'auto'
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  generation_config: *generation_params
+  transformers_version: "4.33.0"
+  model_provider: 'huggingface'

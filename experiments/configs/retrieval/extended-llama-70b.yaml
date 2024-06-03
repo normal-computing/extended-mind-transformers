@@ -1,0 +1,155 @@
+logs_dir: "./experiments/runs/retrieval/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+model: &model_params
+  vocab_size: 32000
+  hidden_size: 8192
+  intermediate_size: 28672
+  num_hidden_layers: 80
+  num_attention_heads: 64
+  num_key_value_heads: 8
+  hidden_act: silu
+  max_position_embeddings: 4096
+  initializer_range: 0.02
+  rms_norm_eps: 1.0e-05
+  use_cache: true
+  pad_token_id: null
+  bos_token_id: 1
+  eos_token_id: 2
+  pretraining_tp: 1
+  tie_word_embeddings: false
+  rope_theta: 10000.0
+  rope_scaling: 
+    type: dynamic
+    factor: 8.0
+  attention_bias: false
+  attention_dropout: 0.0
+  mask_by_sim: false
+  sim_threshold: 0.25
+  topk: 4
+  use_external_mind: true
+  memory_type: manual
+  memory_device: cuda:0
+  remove_special_ids: true
+
+generation: &generation_params
+  sample: False
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 2
+
+rag2: &rag2
+  default_k: 4
+  step_k: 8
+  entropy_thresh: 1.0
+
+rag: &rag
+  tokens_per_chunk: 500
+  chunk_overlap: 0
+  n_chunks: 5
+
+# Experiment
+experiment_config:
+  chat_model: false
+  use_rag: true
+  dynamic_topk: false
+  use_rag2: false
+  rag_config: *rag
+  precision: float8
+  experiment_name: retrieval
+  model_architecture: 'llama'
+  model_config: *model_params
+  model_location: 'local'
+  model_extended: true
+  auto_model: false
+  n_tokens: 30
+  devices: ['cuda']
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-70b-chat-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-70b-chat-hf
+  generation_config: *generation_params
+  rag2_config: *rag2
+  transformers_version: "4.33.0"
+  model_provider: 'huggingface'
+  one_shot: "Answer the question based on the information provided in the document given in memory. The answer should be a single word or a number or a short phrase of few words.\ngeorge balanchine (/ˈbælən(t)ʃiːn, ˌbælənˈ(t)ʃiːn/;[1] born georgiy melitonovich balanchivadze; russian: георгий мелитонович баланчивадзе; georgian: გიორგი მელიტონის ძე ბალანჩივაძე; january 22, 1904 (o. s. january 9) – april 30, 1983) was an american ballet choreographer of georgian origin, recognized as one of the most influential choreographers of the 20th-century.[2] styled as the father of american ballet,[3] he co-founded the new york city ballet and remained its artistic director for more than 35 years.[4] his choreography is characterized by plotless ballets with minimal costume and décor, performed to classical and neoclassical music.[5]\nQuestion: when did George Balanchine die?\nAnswer: april 30, 1983\n\n"
+  device_map: {'model.embed_tokens': 0, 'model.layers.0': 0,
+        'model.layers.1': 0,
+        'model.layers.2': 0,
+        'model.layers.3': 0,
+        'model.layers.4': 0,
+        'model.layers.5': 0,
+        'model.layers.6': 0,
+        'model.layers.7': 0,
+        'model.layers.8': 0,
+        'model.layers.9': 0,
+        'model.layers.10': 0,
+        'model.layers.11': 0,
+        'model.layers.12': 0,
+        'model.layers.13': 0,
+        'model.layers.14': 0,
+        'model.layers.15': 0,
+        'model.layers.16': 0,
+        'model.layers.17': 2,
+        'model.layers.18': 2,
+        'model.layers.19': 2,
+        'model.layers.20': 1,
+        'model.layers.21': 1,
+        'model.layers.22': 1,
+        'model.layers.23': 1,
+        'model.layers.24': 1,
+        'model.layers.25': 1,
+        'model.layers.26': 1,
+        'model.layers.27': 1,
+        'model.layers.28': 1,
+        'model.layers.29': 1,
+        'model.layers.30': 3,
+        'model.layers.31': 3,
+        'model.layers.32': 3,
+        'model.layers.33': 1,
+        'model.layers.34': 1,
+        'model.layers.35': 2,
+        'model.layers.36': 2,
+        'model.layers.37': 2,
+        'model.layers.38': 2,
+        'model.layers.39': 2,
+        'model.layers.40': 2,
+        'model.layers.41': 2,
+        'model.layers.42': 2,
+        'model.layers.43': 2,
+        'model.layers.44': 2,
+        'model.layers.45': 2,
+        'model.layers.46': 2,
+        'model.layers.47': 2,
+        'model.layers.48': 2,
+        'model.layers.49': 2,
+        'model.layers.50': 2,
+        'model.layers.51': 2,
+        'model.layers.52': 2,
+        'model.layers.53': 2,
+        'model.layers.54': 2,
+        'model.layers.55': 2,
+        'model.layers.56': 1,
+        'model.layers.57': 1,
+        'model.layers.58': 1,
+        'model.layers.59': 1,
+        'model.layers.60': 1,
+        'model.layers.61': 3,
+        'model.layers.62': 3,
+        'model.layers.63': 3,
+        'model.layers.64': 3,
+        'model.layers.65': 3,
+        'model.layers.66': 3,
+        'model.layers.67': 3,
+        'model.layers.68': 3,
+        'model.layers.69': 3,
+        'model.layers.70': 3,
+        'model.layers.71': 3,
+        'model.layers.72': 3,
+        'model.layers.73': 3,
+        'model.layers.74': 3,
+        'model.layers.75': 3,
+        'model.layers.76': 3,
+        'model.layers.77': 3,
+        'model.layers.78': 3,
+        'model.layers.79': 3,
+        'model.norm': 3,
+        'lm_head.weight': 3}

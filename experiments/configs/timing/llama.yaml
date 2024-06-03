@@ -1,0 +1,33 @@
+logs_dir: "./experiments/runs/timing/"
+dataset_path: "./experiments/data/wikiqa-edited.json"
+
+model: &model_params
+  rms_norm_eps: 1.0e-05
+  use_cache: true
+  rope_scaling:
+    type: dynamic
+    factor: 8.0
+
+generation: &generation_params
+  sample: False
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 2
+
+# Experiment
+experiment_config:
+  cache_context: true
+  n_queries: 25
+  experiment_name: timing
+  model_architecture: 'llama'
+  fp16: false
+  model_config: *model_params
+  auto_model: true
+  model_extended: false
+  n_tokens: 30
+  devices: ['cuda:0']
+  tokenizer_pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-hf
+  generation_config: *generation_params
+  transformers_version: "4.36.0"
+  model_provider: 'huggingface'

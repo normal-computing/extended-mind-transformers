@@ -1,0 +1,43 @@
+logs_dir: "./experiments/runs/perplexity/"
+dataset_path: "./experiments/data/wikitext.json"
+
+model: &model_params
+  d_model: 4096
+  emb_pdrop: 0.0
+  embedding_fraction: 1.0
+  expansion_ratio: 4
+  init_device: cpu
+  initializer_range: 0.02
+  layer_norm_epsilon: 1.0e-06
+  learned_pos_emb: true
+  logit_scale: null
+  max_seq_len: 2048
+  memory_device: cuda:1
+  n_heads: 32
+  n_layers: 32
+  no_bias: true
+  norm_type: low_precision_layernorm
+  resid_pdrop: 0.0
+  topk: 3
+  use_external_mind: true
+  use_cache: false
+  verbose: 0
+  vocab_size: 50432
+  mask_by_sim: false
+  memory_type: manual
+
+experiment_config:
+  devices: ['cuda:1']
+  experiment_name: perplexity
+  input_lengths: [512, 1024, 1536, 2048, 2560, 3072, 3584, 4096, 4608, 5120, 5632,6144, 6656, 7168, 7680, 8192, 8704, 9216, 9728]
+  persist_cache: false
+  verbose: false
+  strategy: extended
+
+  model_name: mpt-7b
+  pretrained_model_name_or_path: mosaicml/mpt-7b
+  tokenizer_pretrained_model_name_or_path: mosaicml/mpt-7b
+  model_config: *model_params
+  model_architecture: mpt
+  max_inference_seq_len: 2048
+  seq_len_trained: 2048
