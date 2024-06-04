@@ -85,7 +85,7 @@ The following figure provides a visual aid for how self-attention is combined wi
 - Install conda as specified here: https://docs.anaconda.com/free/miniconda/#quick-command-line-install
 - Create Environment: ``conda create --name emt_env python=3.11``
 - Activate Environment: ``conda activate emt_env``
-- Install packages: python ``-m pip install -r requirements.txt``
+- Install packages: ``python -m pip install -r requirements.txt``
 
 ### Data set up
 Everything should run from root: ``PYTHONPATH=. python``
