@@ -30,12 +30,12 @@
 </div>
 
 ## TLDR
-This is the official implementation of [Extended Mind Transformers](arXiv link here). We open-source a [collection](https://huggingface.co/collections/normalcomputing/extended-mind-transformers-6655e9ba5853d86b32793aaf) of Extended Mind Transformers, as well as a new counterfactual [long-range benchmark](https://huggingface.co/datasets/normalcomputing/wikiqa-counterfactual). 
+This is the official implementation of [Extended Mind Transformers](https://arxiv.org/abs/2406.02332). We open-source a [collection](https://huggingface.co/collections/normalcomputing/extended-mind-transformers-6655e9ba5853d86b32793aaf) of Extended Mind Transformers, as well as a new counterfactual [long-range benchmark](https://huggingface.co/datasets/normalcomputing/wikiqa-counterfactual). 
 
 ## Overview
 
 ### Extended Mind Transformers
-We present [Extended Mind Transformers](arXiv link here), a variety of decoder-only transformers closely related to [Memorizing Transformers](https://arxiv.org/abs/2203.08913) that retrieve and attend to an external cache of key-value pairs (or memories) without finetuning. The model decides for each token, within a particular decoder, which memories are important. The complete collection of Extended Mind Transformers includes:
+We present [Extended Mind Transformers](https://arxiv.org/abs/2406.02332), a variety of decoder-only transformers closely related to Memorizing Transformers [(Wu et al. 2022)](https://arxiv.org/abs/2203.08913) that retrieve and attend to an external cache of key-value pairs (or memories) without finetuning. The model decides for each token, within a particular decoder, which memories are important. The complete collection of Extended Mind Transformers includes:
 
 <div align="center">
 
@@ -61,7 +61,7 @@ model.memory_ids = list_of_new_token_ids
 
 ### Topk Attention on Memories
 
-The retrieval-augmentation we introduce to the self-attention mechanism is quite straightforward. In addition to self-attention, we introduce top-k attention \cite{gupta2021memoryefficient} over the cached key-value pairs. I.e., we allow each query token to attend to a certain number of external key-value pairs where the cosine similarity between the query and key is largest. The retrieval-augmented attention mechanism can be described by the following equations:
+The retrieval-augmentation we introduce to the self-attention mechanism is quite straightforward. In addition to self-attention, we introduce top-k attention [(Gupta et al. 2021)](https://arxiv.org/abs/2106.06899) over the cached key-value pairs. I.e., we allow each query token to attend to a certain number of external key-value pairs where the cosine similarity between the query and key is largest. The retrieval-augmented attention mechanism can be described by the following equations:
 
 <div align="center">
 
@@ -201,20 +201,20 @@ In this plot, each cell represents samples where the number of fact appearances 
 
 
 ## Authors
-- [Phoebe Klett]()
-- [Thomas Ahle]()
+- [Phoebe Klett](https://arxiv.org/search/cs?searchtype=author&query=Klett,+P)
+- [Thomas Ahle](https://scholar.google.dk/citations?user=aRiVoYgAAAAJ&hl=en)
 
 
 ## Citation
 To cite this work please use
 ```bibtex
-@misc{placeholder,
+@misc{klett2024extended,
       title={Extended Mind Transformers}, 
       author={Phoebe Klett and Thomas Ahle},
       year={2024},
-      eprint={2307.03170},
+      eprint={2406.02332},
       archivePrefix={arXiv},
-      primaryClass={cs.CL}
+      primaryClass={cs.LG}
 }
 ```
 
