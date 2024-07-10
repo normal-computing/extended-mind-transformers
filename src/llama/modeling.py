@@ -47,7 +47,7 @@ from transformers.utils import (
     replace_return_docstrings,
 )
 
-from src.llama.configuration import ExtendedLlamaConfig
+from .configuration import ExtendedLlamaConfig
 
 logger = logging.get_logger(__name__)
 
@@ -1165,7 +1165,81 @@ class ExtendedLlamaForCausalLM(LlamaPreTrainedModel):
         # Initialize weights and apply final processing
         self.post_init()
 
-    # EM: Clear memory cache
+    # EM: Add to memory memory
+
+    def add_to_memory(self, new_memory_ids: torch.LongTensor):
+
+        if isinstance(new_memory_ids, list):
+            new_memory_ids = torch.tensor([new_memory_ids], device=self.device)
+
+        # generating cache for new memories
+        new_memories = self.generate_cache(new_memory_ids, cache_type = self.memory_type)
+
+        # removing special tokens 
+        if self.remove_special_ids:
+            idx_to_remove = [
+                token_idx
+                for token_idx, token in enumerate(new_memory_ids[0])
+                if token in self.tokenizer_all_special_ids
+            ]
+            if self.memory_type == "manual":
+                mask = torch.ones(new_memories[0][0].size(), dtype = torch.bool)
+                mask[:,:, idx_to_remove, :] = False # masking off special tokens
+
+                new_size = (
+                    new_memories[0][0].size(0),
+                    new_memories[0][0].size(1),
+                    -1,
+                    new_memories[0][0].size(3)
+                ) # new size removing special tokens from sequence length
+
+                new_memories = [
+                    (ks[mask].view(new_size), vs[mask].view(new_size))
+                    for ks, vs in new_memories
+                ]
+            else: #faiss
+                kn_index, kv_index = new_memories
+                all_idx_to_remove = [
+                    [
+                        i
+                        for i in range(0, kn_index.total)
+                        if (
+                            i
+                            % (
+                                kn_index.ntotal
+                                / (
+                                    self.config.num_attention_heads
+                                    * self.config.num_hidden_layers
+                                )
+                            )
+                        )
+                        == j
+                    ]
+                    for j in idx_to_remove
+                ]
+                kn_index.remove_ids(np.array(all_idx_to_remove).flatten().astype("int64"))
+                kv_index.remove_ids(np.array(all_idx_to_remove).flatten().astype("int64"))
+        
+        # Appending new memories
+        if self.memories is None:
+            self.memories = new_memories
+        else:
+            if self.memory_type == "manual":
+                self.memories = [(
+                    torch.cat([existing_k, new_k], dim = 2),
+                    torch.cat([existing_v, new_v], dim = 2)
+                )
+                for (existing_k, existing_v), (new_k, new_v)
+                in zip(self.memories, new_memories)
+                ]
+            else:
+                existing_kn, existing_kv = self.memories
+                new_kn, new_kv = new_memories
+                existing_kn.add(new_kn.reconstruct_n(0, new_kn.ntotal))
+                existing_kv.add(new_kv.reconstruct_n(0, new_kv.ntotal))
+        
+        self.memory_ids = torch.cat([self.memory_ids, new_memory_ids], dim=1) if self.memory_ids is not None else new_memory_ids
+
     def clear_memory(self):
         """Clear memory cache."""
         self.memory_ids = None
@@ -1218,7 +1292,6 @@ class ExtendedLlamaForCausalLM(LlamaPreTrainedModel):
                 Labels for computing the masked language modeling loss. Indices should either be in `[0, ...,
                 config.vocab_size]` or -100 (see `input_ids` docstring). Tokens with indices set to `-100` are ignored
                 (masked), the loss is only computed for the tokens with labels in `[0, ..., config.vocab_size]`.
-
         Returns:
 
         Example:
@@ -1237,62 +1310,6 @@ class ExtendedLlamaForCausalLM(LlamaPreTrainedModel):
         >>> tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
         "Hey, are you conscious? Can you talk to me?\nI'm not conscious, but I can talk to you."
         ```"""
-
-        # EM: Generate key value cache once on first call
-        if (
-            self.memory_ids is not None and self.memories is None
-        ): 
-            self.memory_ids = torch.tensor([self.memory_ids], device=self.device) if type(self.memory_ids)==list else self.memory_ids
-            self.memories = self.generate_cache(
-                self.memory_ids, cache_type=self.memory_type,
-            )
-            # EM: Remove special tokens from memory cache
-            if self.remove_special_ids:
-                idx_to_remove = [
-                    token_idx
-                    for token_idx, token in enumerate(self.memory_ids[0])
-                    if token in self.tokenizer_all_special_ids
-                ]
-                if self.memory_type == "manual":
-                    mask = torch.ones(self.memories[0][0].size(), dtype=torch.bool)
-                    mask[:, :, idx_to_remove, :] = False
-
-                    new_size = (
-                        self.memories[0][0].size(0),
-                        self.memories[0][0].size(1),
-                        -1,
-                        self.memories[0][0].size(3),
-                    )
-                    self.memories = [
-                        (ks[mask].view(new_size), vs[mask].view(new_size))
-                        for ks, vs in self.memories
-                    ]
-                else:
-                    kn_index, kv_index = self.memories
-                    all_idx_to_remove = [
-                        [
-                            i
-                            for i in range(0, kn_index.ntotal)
-                            if (
-                                i
-                                % (
-                                    kn_index.ntotal
-                                    / (
-                                        self.config.num_attention_heads
-                                        * self.config.num_hidden_layers
-                                    )
-                                )
-                            )
-                            == j
-                        ]
-                        for j in idx_to_remove
-                    ]
-                    kn_index.remove_ids(
-                        np.array(all_idx_to_remove).flatten().astype("int64")
-                    )
-                    kv_index.remove_ids(
-                        np.array(all_idx_to_remove).flatten().astype("int64")
-                    )
 
         output_attentions = (
             output_attentions
