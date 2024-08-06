@@ -111,7 +111,7 @@ class RetrievalExperiment:
                 )
 
             elif config["model_architecture"] == "llama":
-                from emts_clean.src.llama.modeling import (
+                from src.llama.modeling import (
                     ExtendedLlamaConfig,
                     ExtendedLlamaForCausalLM,
                 )
@@ -134,7 +134,7 @@ class RetrievalExperiment:
                     **self.model_kwargs
                 )
             elif config["model_architecture"] == "mpt":
-                from emts_clean.src.mpt.modeling import (
+                from src.mpt.modeling import (
                     ExtendedMptConfig,
                     ExtendedMptForCausalLM,
                 )
@@ -296,12 +296,6 @@ class RetrievalExperiment:
                         generation_config=self.generation_config,
                         **generate_kwargs,
                         
-                        #necessary for llama3
-                        do_sample=False,
-                        bos_token_id=128000,
-                        eos_token_id=128001,
-                        pad_token_id=0
-                        #####
                     )
                     text = self.tokenizer.decode(out[0][-self.n_tokens :])
             else:
@@ -313,7 +307,10 @@ class RetrievalExperiment:
                     max_tokens=self.n_tokens,
                 )
 
-            evaluation = int(sample["answer"].lower() in text.lower())
+            if isinstance(sample["answer"],str):
+                evaluation = int(sample["answer"].lower() in text.lower())
+            elif isinstance(sample['answer'], list):
+                evaluation = int(any(answer.lower() in text.lower() for answer in sample["answer"]))
 
             if self.model_extended:
                 self.model.clear_memory()

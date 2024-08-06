@@ -3,9 +3,9 @@ import json
 import pandas as pd
 from datasets import load_dataset
 
-EDITS = json.load(open("./emts_clean/experiments/data/edits.json"))
+EDITS = json.load(open("./experiments/data/edits.json"))
 SPLITS = ["2k", "4k", "8k", "16k"]
-SAVE_FILEPATH = "./emts_clean/experiments/data/wikiqa-edited.json"
+SAVE_FILEPATH = "./experiments/data/wikiqa-edited.json"
 
 
 def prepare(split: str):

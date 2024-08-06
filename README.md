@@ -143,7 +143,7 @@ Experiments should be run using the pattern:
 ``PYTHONPATH=. python /path/to/run_experiment.py --base /path/to/config.yaml``
 
 Example:
-``PYTHONPATH=. python ./emts_clean/experiments/run_retrieval.py --base ./emts_clean/experiments/configs/extended-llama-retrieval-70b.yaml``
+``PYTHONPATH=. python ./experiments/run_retrieval.py --base ./experiments/configs/extended-llama-retrieval-70b.yaml``
 
 If running OpenAI models (including embeddings for RAG), run this from your terminal first: 
 ```

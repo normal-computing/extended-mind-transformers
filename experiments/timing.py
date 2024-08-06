@@ -79,7 +79,7 @@ class TimingExperiment:
                 trust_remote_code=True,
             ).to(self.devices[0])
         elif config["model_architecture"] == "llama":
-            from emts_clean.src.llama.modeling import (
+            from src.llama.modeling import (
                 ExtendedLlamaConfig,
                 ExtendedLlamaForCausalLM,
             )
@@ -102,7 +102,7 @@ class TimingExperiment:
                 torch_dtype=model_dtype,
             ).to(self.devices[0])
         elif config["model_architecture"] == "mpt":
-            from emts_clean.src.mpt.modeling import (
+            from src.mpt.modeling import (
                 ExtendedMptConfig,
                 ExtendedMptForCausalLM,
             )
